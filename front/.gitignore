@@ -2,3 +2,5 @@
 .next/
 # Dependency directories
 node_modules/
+
+.eslintrc
