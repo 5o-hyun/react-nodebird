@@ -1,18 +1,20 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../reducers/user";
 
-const LoginForm = ({ setIsLogin }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch();
   const [id, setId] = useInput("");
   const [password, setPassword] = useInput("");
 
   const style = useMemo(() => ({ marginTop: "10px" }, []));
 
   const onSubmitForm = useCallback(() => {
-    console.log("id, password");
-    setIsLogin(true);
+    dispatch(loginAction({ id, password }));
   }, [id, password]);
 
   return (
