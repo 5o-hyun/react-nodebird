@@ -8,7 +8,8 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const me = useSelector((state) => state.user.me);
+
   return (
     <div>
       <Menu mode="horizontal">
@@ -27,7 +28,7 @@ const Layout = ({ children }) => {
       </Menu>
       <Row gutter={6}>
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {me ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}

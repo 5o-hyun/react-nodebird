@@ -34,7 +34,7 @@ export const UNFollow_SUCCESS = "UNFollow_SUCCESS";
 export const UNFollow_FAILURE = "UNFollow_FAILURE";
 
 const dummyUser = (data) => ({
-  ...action.data,
+  ...data,
   nickname: "sohyun",
   id: 1,
   Posts: [],
@@ -79,6 +79,7 @@ const reducer = (state = initialState, action) => {
         logoutLoading: true,
         logoutDone: false,
         logoutError: null,
+        me: null,
       };
     case LOG_OUT_SUCCESS:
       return {

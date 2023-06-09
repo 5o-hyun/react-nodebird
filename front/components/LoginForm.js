@@ -8,22 +8,28 @@ import { loginAction, loginRequestAction } from "../reducers/user";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const { isLoggingIn } = useSelector((state) => state.user);
-  const [id, setId] = useInput("");
+  const { loginLoading } = useSelector((state) => state.user);
+  const [email, setEmail] = useInput("");
   const [password, setPassword] = useInput("");
 
   const style = useMemo(() => ({ marginTop: "10px" }, []));
 
   const onSubmitForm = useCallback(() => {
-    dispatch(loginRequestAction({ id, password }));
-  }, [id, password]);
+    dispatch(loginRequestAction({ email, password }));
+  }, [email, password]);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-id">아이디</label>
+        <label htmlFor="user-email">이메일</label>
         <br />
-        <Input name="user-id" value={id} onChange={setId} required />
+        <Input
+          name="user-email"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          required
+        />
       </div>
       <div>
         <label htmlFor="user-pw">패스워드</label>
@@ -36,7 +42,7 @@ const LoginForm = () => {
         />
       </div>
       <ButtonWrapper style={style}>
-        <Button type="primary" htmlType="submit" loading={isLoggingIn}>
+        <Button type="primary" htmlType="submit" loading={loginLoading}>
           로그인
         </Button>
         <Link href="/signup">
