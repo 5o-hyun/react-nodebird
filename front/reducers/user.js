@@ -1,6 +1,12 @@
 import { produce } from "immer";
 
 export const initialState = {
+  followLoading: false, // 팔로우 시도중
+  followDone: false,
+  followError: null,
+  unfollowLoading: false, // 언팔로우 시도중
+  unfollowDone: false,
+  unfollowError: null,
   loginLoading: false, // 로그인 시도중
   loginDone: false,
   loginError: null,
@@ -34,13 +40,13 @@ export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
 export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
 export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 
-export const Follow_REQUEST = "Follow_REQUEST";
-export const Follow_SUCCESS = "Follow_SUCCESS";
-export const Follow_FAILURE = "Follow_FAILURE";
+export const FOLLOW_REQUEST = "FOLLOW_REQUEST";
+export const FOLLOW_SUCCESS = "FOLLOW_SUCCESS";
+export const FOLLOW_FAILURE = "FOLLOW_FAILURE";
 
-export const UNFollow_REQUEST = "UNFollow_REQUEST";
-export const UNFollow_SUCCESS = "UNFollow_SUCCESS";
-export const UNFollow_FAILURE = "UNFollow_FAILURE";
+export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
+export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
+export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 export const REMOVE_POST_OF_ME = "ADD_REMOVE_POST_OF_ME";
@@ -66,6 +72,36 @@ export const logoutRequestAction = () => ({
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
+      case UNFOLLOW_REQUEST:
+        draft.unfollowLoading = true;
+        draft.unfollowDone = false;
+        draft.unfollowError = null;
+        break;
+      case UNFOLLOW_SUCCESS:
+        draft.unfollowLoading = false;
+        draft.unfollowDone = true;
+        draft.me.Followings = draft.me.Followings.filter(
+          (v) => v.id !== action.data
+        );
+        break;
+      case UNFOLLOW_FAILURE:
+        draft.unfollowLoading = false;
+        draft.unfollowDone = action.error;
+        break;
+      case FOLLOW_REQUEST:
+        draft.followLoading = true;
+        draft.followDone = false;
+        draft.followError = null;
+        break;
+      case FOLLOW_SUCCESS:
+        draft.followLoading = false;
+        draft.followDone = true;
+        draft.me.Followings.push({ id: action.data });
+        break;
+      case FOLLOW_FAILURE:
+        draft.followLoading = false;
+        draft.followDone = action.error;
+        break;
       case LOG_IN_REQUEST: // 로딩시 에러는 없애는게 국룰
         draft.loginLoading = true;
         draft.loginDone = false;
