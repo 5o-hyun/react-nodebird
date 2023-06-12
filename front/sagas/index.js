@@ -26,4 +26,5 @@ takeLeading : " // 여러번누르면, 첫번째만 실행
 그래서 백엔드에서 검사를 해서 막아야함.
 요청자체를 제한할수는 없을까? 있다.
 throttle : " // 몇초동안 요청자체를 막음      yield throttle("ADD_POST_REQUEST", addPost, 2000);
+하지만 이것도 문제가 있으므로 호출시 조건문에 !isLoading 등을 추가해서 요청자체를 한번만 하게한다.
 */
