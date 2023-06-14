@@ -1,42 +1,31 @@
-'use strict';
-
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const Sequelize = require("sequelize");
+const env = process.env.NODE_ENV || "development"; // 환경변수 기본값으로 development. 나중에 배포시 production || development로 바꿔 배포용일땐 production써준다
+const config = require("../config/config")[env]; // config의 development를 가져온다.
 const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// 시퀄라이즈에 이 정보를 보내면 mysql2드라이버에 들어가서 mysql과 노드를 연결할수있게된다.
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+);
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+// db 빈 배열에 만든 테이블 import
+db.Comment = require("./comment")(sequelize, Sequelize);
+db.Hashtag = require("./hashtag")(sequelize, Sequelize);
+db.Image = require("./image")(sequelize, Sequelize);
+db.Post = require("./post")(sequelize, Sequelize);
+db.User = require("./user")(sequelize, Sequelize);
 
-Object.keys(db).forEach(modelName => {
+// db에 associate 한것들 반복돌리며 import
+Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
+// db에 시퀄라이즈 넣음
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
