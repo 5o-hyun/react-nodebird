@@ -4,6 +4,10 @@ const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const db = require("./models");
 const app = express();
+const passportConfig = require("./passport");
+const passport = require("./passport");
+
+passportConfig();
 
 db.sequelize
   .sync()
