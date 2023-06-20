@@ -13,12 +13,12 @@ module.exports = () => {
       async (email, password, done) => {
         try {
           // 이메일있는지
-          const exUser = await User.findOne({
+          const user = await User.findOne({
             where: {
               email: email,
             },
           });
-          if (!User) {
+          if (!user) {
             return done(null, false, { reason: "존재하지 않는 이메일입니다." }); // done으로 결과판단. (서버에러, 성공여부, 클라이언트에러)
           }
           // 입력한비번과 db에있는비번이 일치하는지. => 일치하면 사용자정보넘기고 일치안하면 에러

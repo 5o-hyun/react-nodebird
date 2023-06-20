@@ -5,6 +5,7 @@ const { User } = require("../models");
 const router = express.Router();
 
 router.post("/login", (req, res, next) => {
+  console.log("backend pass");
   passport.authenticate("local", (err, user, info) => {
     // 서버에러있으면
     if (err) {
@@ -17,12 +18,26 @@ router.post("/login", (req, res, next) => {
     }
     return req.login(user, async (loginErr) => {
       if (loginErr) {
-        console.log(loginErr);
+        console.error(loginErr);
         return next(loginErr);
       }
       return res.status(200).json(user);
     });
   })(req, res, next);
+});
+/*  로그인전체흐름 
+1. 프론트의 /user/login이 실행 (line:7)
+2. 로컬전략에서 email,pw 받아와 (line:8)
+3. 로그인을하면 이때 passport/index.js 의 serializeUser실행됨 (line:18)
+실행되면, 쿠키랑 user전체정보가아니라 쿠키랑 user id 만 서버에서 들고있게되고 
+4. 프론트로 보낼떄 쿠키랑 user정보를 보내줌 (line:23)
+ */
+
+router.post("/logout", async (req, res, next) => {
+  // 쿠키,세션 삭제
+  req.logout();
+  req.session.destroy();
+  res.send("ok");
 });
 
 router.post("/", async (req, res) => {

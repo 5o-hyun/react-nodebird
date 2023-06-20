@@ -67,7 +67,7 @@ function* follow(action) {
   }
 }
 
-function loginAPI() {
+function loginAPI(data) {
   return axios.post("/user/login", data);
 }
 
@@ -80,6 +80,7 @@ function* login(action) {
       data: result.data,
     });
   } catch (err) {
+    console.log("login실패");
     yield put({
       type: LOG_IN_FAILURE,
       error: err.response.data,
