@@ -1,11 +1,11 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const { User } = require("../models");
+const { User, Post } = require("../models");
+const db = require("../models");
 const router = express.Router();
 
 router.post("/login", (req, res, next) => {
-  console.log("backend pass");
   passport.authenticate("local", (err, user, info) => {
     // 서버에러있으면
     if (err) {
@@ -21,7 +21,25 @@ router.post("/login", (req, res, next) => {
         console.error(loginErr);
         return next(loginErr);
       }
-      return res.status(200).json(user);
+      // 이미 user가 있는데 또 찾는 이유는, 기존 user에 정보가 부족해서 me.Posts, me.Followers, me.Followings 등등을 추가해 찾으려고함
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: { excludes: ["password"] }, // 비밀번호 제외하고 받겠다.
+        include: [
+          {
+            model: Post, // hasMany라서 model:Post가 me.Posts가 됨. models에 있는걸 가져옴
+          },
+          {
+            model: User,
+            as: "Followers",
+          },
+          {
+            model: User,
+            as: "Followings",
+          },
+        ],
+      });
+      return res.status(200).json(fullUserWithoutPassword); // back : user , saga : action,data , reducer : me
     });
   })(req, res, next);
 });
