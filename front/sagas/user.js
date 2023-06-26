@@ -74,13 +74,12 @@ function loginAPI(data) {
 function* login(action) {
   try {
     const result = yield call(loginAPI, action.data);
-    yield delay(1000);
     yield put({
       type: LOG_IN_SUCCESS,
       data: result.data,
     });
   } catch (err) {
-    console.log("login실패");
+    console.error("login실패");
     yield put({
       type: LOG_IN_FAILURE,
       error: err.response.data,
@@ -88,18 +87,18 @@ function* login(action) {
   }
 }
 
-function loginOutAPI() {
-  return axios.post("/logout");
+function logoutAPI() {
+  return axios.post("/user/logout");
 }
 
 function* logout() {
   try {
-    // const result = yield call(loginOutAPI);
-    yield delay(1000);
+    yield call(logoutAPI);
     yield put({
       type: LOG_OUT_SUCCESS,
     });
   } catch (err) {
+    console.error(err);
     yield put({
       type: LOG_OUT_FAILURE,
       error: err.response.data,

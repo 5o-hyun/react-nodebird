@@ -2,10 +2,10 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const { User, Post } = require("../models");
-const db = require("../models");
+const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const router = express.Router();
 
-router.post("/login", (req, res, next) => {
+router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     // 서버에러있으면
     if (err) {
@@ -48,17 +48,18 @@ router.post("/login", (req, res, next) => {
 2. 로컬전략에서 email,pw 받아와 (line:8)
 3. 로그인을하면 이때 passport/index.js 의 serializeUser실행됨 (line:18)
 실행되면, 쿠키랑 user전체정보가아니라 쿠키랑 user id 만 서버에서 들고있게되고 
-4. 프론트로 보낼떄 쿠키랑 user정보를 보내줌 (line:23)
+4. 프론트로 보낼떄 쿠키랑 user정보를 보내줌 (line:42)
  */
 
-router.post("/logout", async (req, res, next) => {
+router.post("/logout", isLoggedIn, (req, res) => {
   // 쿠키,세션 삭제
   req.logout();
   req.session.destroy();
   res.send("ok");
 });
 
-router.post("/", async (req, res) => {
+// 회원가입
+router.post("/", isNotLoggedIn, async (req, res) => {
   try {
     const exUser = await User.findOne({
       where: {
