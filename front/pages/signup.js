@@ -10,13 +10,19 @@ import router from "next/router";
 
 const signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector(
+  const { signUpLoading, signUpDone, signUpError, loginDone } = useSelector(
     (state) => state.user
   );
 
   useEffect(() => {
+    if (loginDone) {
+      router.replace("/"); // push는 뒤로가기하면 페이지나옴. replace는 뒤로가기해도 안나옴
+    }
+  }, [loginDone]);
+
+  useEffect(() => {
     if (signUpDone) {
-      router.push("/");
+      router.replace("/");
     }
   }, [signUpDone]);
 
