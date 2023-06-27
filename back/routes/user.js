@@ -53,7 +53,7 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 
 router.post("/logout", isLoggedIn, (req, res) => {
   // 쿠키,세션 삭제
-  req.logout();
+  req.logout(() => {});
   req.session.destroy();
   res.send("ok");
 });

@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import {
   all,
   fork,
@@ -26,6 +27,8 @@ import {
   UNFOLLOW_SUCCESS,
   UNFOLLOW_FAILURE,
 } from "../reducers/user";
+
+axios.defaults.withCredentials = true;
 
 function unfollowAPI() {
   return axios.post("/api/post", data);
