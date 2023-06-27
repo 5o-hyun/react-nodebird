@@ -5,6 +5,40 @@ const { User, Post } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const router = express.Router();
 
+// 로그인유지
+router.get("/", async (req, res, next) => {
+  try {
+    if (req.user) {
+      // const user = await User.findOne({
+      //   where: { id: req.user.id },
+      // });
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.user.id },
+        attributes: { excludes: ["password"] },
+        include: [
+          {
+            model: Post,
+          },
+          {
+            model: User,
+            as: "Followers",
+          },
+          {
+            model: User,
+            as: "Followings",
+          },
+        ],
+      });
+      res.status(200).json(fullUserWithoutPassword);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     // 서버에러있으면

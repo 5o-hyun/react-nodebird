@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import { LOAD_POST_REQUEST } from "../reducers/post";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,9 @@ const index = () => {
   );
 
   useEffect(() => {
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
     dispatch({
       type: LOAD_POST_REQUEST,
     });
