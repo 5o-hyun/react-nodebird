@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Post.associate = (db) => {
-    db.Post.belongsTo(db.User); // post는 어떤 user에게 속해있다.
-    db.Post.hasMany(db.Comment);
-    db.Post.hasMany(db.Image);
-    db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" });
-    db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" });
-    db.Post.belongsTo(db.Post, { as: "Retweet" });
+    db.Post.belongsTo(db.User); // post는 어떤 user에게 속해있다. // post.addUser post.getUser post.setUser
+    db.Post.hasMany(db.Comment); // post.addComments post.getComments
+    db.Post.hasMany(db.Image); // post.addImages, post.getImages
+    db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" }); // post.addHashtags
+    db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" }); // post.addLikers post.removeLikers
+    db.Post.belongsTo(db.Post, { as: "Retweet" }); // post.addRetweet
   };
   return Post;
 };

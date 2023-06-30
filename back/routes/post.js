@@ -1,6 +1,7 @@
 const express = require("express");
 
 const { User, Post, Comment, Image } = require("../models");
+const user = require("../models/user");
 const { isLoggedIn } = require("./middlewares");
 
 const router = express.Router();
@@ -16,12 +17,24 @@ router.post("/", isLoggedIn, async (req, res, next) => {
         { model: Image },
         {
           model: Comment,
-          include: [{ model: User, attributes: ["id", "nickname"] }],
+          include: [
+            {
+              model: User, // 댓글 작성자
+              attributes: ["id", "nickname"],
+            },
+          ],
         },
-        { model: User, attributes: ["id", "nickname"] },
+        {
+          model: User, // 게시글 작성자
+          attributes: ["id", "nickname"],
+        },
+        {
+          model: User, // 좋아요 누른 사람
+          as: "Likers",
+          attributes: ["id"],
+        },
       ],
     });
-    console.log(fullPost);
     res.status(201).json(fullPost);
   } catch (error) {
     console.error(error);
@@ -58,6 +71,38 @@ router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next(error);
+  }
+});
+
+router.delete("/:postId/like", async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+    if (!post) {
+      return res.status(403).send("게시글이 존재하지 않습니다.");
+    }
+    await post.removeLikers(req.user.id);
+    res.json({ PostId: post.id, UserId: req.user.id });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.patch("/:postId/like", async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+    if (!post) {
+      return res.status(403).send("게시글이 존재하지 않습니다.");
+    }
+    await post.addLikers(req.user.id);
+    res.json({ PostId: post.id, UserId: req.user.id });
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
