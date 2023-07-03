@@ -56,7 +56,7 @@ export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
-export const REMOVE_POST_OF_ME = "ADD_REMOVE_POST_OF_ME";
+export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
 
 const dummyUser = (data) => ({
   ...data,
@@ -171,9 +171,9 @@ const reducer = (state = initialState, action) => {
         draft.changeNicknameError = null;
         break;
       case CHANGE_NICKNAME_SUCCESS:
+        draft.me.nickname = action.data.nickname;
         draft.changeNicknameLoading = false;
         draft.changeNicknameDone = true;
-        draft.me = null;
         break;
       case CHANGE_NICKNAME_FAILURE:
         draft.changeNicknameLoading = false;

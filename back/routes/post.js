@@ -41,8 +41,21 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
-router.delete("/", (req, res) => {
-  res.json({ id: 1 });
+
+router.delete("/:postId", isLoggedIn, async (req, res, next) => {
+  try {
+    // 시퀄라이즈에서 find 조회, create 생성, destroy 삭제, update 수정(객체1:수정할거 객체2:조건)
+    const post = await Post.destroy({
+      where: {
+        id: req.params.postId,
+        UserId: req.user.id,
+      },
+    });
+    res.json({ PostId: parseInt(req.params.postId, 10) });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 });
 
 router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {

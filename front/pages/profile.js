@@ -13,7 +13,7 @@ const profile = () => {
     if (!(me && me.id)) {
       router.push("/");
     }
-  }, []);
+  }, [me && me.id]);
   if (!me) {
     return null;
   }
