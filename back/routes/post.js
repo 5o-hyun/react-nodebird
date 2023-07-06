@@ -1,10 +1,51 @@
 const express = require("express");
+const multer = require("multer"); // npm i multer@1.4.4 : 파일, 이미지 등을 업로드하기위한 미들웨어
+const path = require("path");
+const fs = require("fs");
 
 const { User, Post, Comment, Image } = require("../models");
 const user = require("../models/user");
 const { isLoggedIn } = require("./middlewares");
 
 const router = express.Router();
+
+try {
+  fs.accessSync("uploads");
+} catch (err) {
+  console.log("uploads 폴더가 없으므로 생성합니다.");
+  fs.mkdirSync("uploads");
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, "uploads"); // uploads 라는 폴더안에 넣겠다.
+    },
+    filename(req, file, done) {
+      // 같은 이름의 파일 방지.(뒤에 시간초를 붙여서 방지함)    ex) 제로초.png
+      const ext = path.extname(file.originalname); // 확장자 추출(png)
+      const basename = path.basename(file.originalname, ext); // 제로초
+      done(null, basename + "_" + new Date().getTime() + ext); // 제로초_1378462874.png
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }, // 파일크기제한 20MB
+});
+
+router.post(
+  "/images",
+  isLoggedIn,
+  upload.array("image"),
+  async (req, res, next) => {
+    try {
+      console.log(req.files);
+      res.json(req.files.map((v) => v.filename));
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  }
+);
+
 router.post("/", isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.create({

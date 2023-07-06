@@ -18,6 +18,7 @@ import {
   UNLIKE_POST_REQUEST,
 } from "../reducers/post";
 import FollowButton from "./FollowButton";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();

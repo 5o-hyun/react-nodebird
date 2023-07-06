@@ -7,6 +7,9 @@ export const initialState = {
   mainPosts: [],
   imagePaths: [],
   hasMorePost: true,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
   unlikePostLoading: false,
   unlikePostDone: false,
   unlikePostError: null,
@@ -26,6 +29,12 @@ export const initialState = {
   addCommentDone: false,
   addCommentError: null,
 };
+
+export const REMOVE_IMAGE = "REMOVE_IMAGE";
+
+export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
+export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
+export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";
 
 export const UNLIKE_POST_REQUEST = "UNLIKE_POST_REQUEST";
 export const UNLIKE_POST_SUCCESS = "UNLIKE_POST_SUCCESS";
@@ -69,6 +78,25 @@ export const addComment = (data) => ({
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
+      case REMOVE_IMAGE:
+        draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+        break;
+      case UPLOAD_IMAGES_REQUEST:
+        draft.uploadImagesLoading = true;
+        draft.uploadImagesDone = false;
+        draft.uploadImagesError = null;
+        break;
+      case UPLOAD_IMAGES_SUCCESS: {
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesDone = true;
+        draft.imagePaths = action.data;
+        break;
+      }
+      case UPLOAD_IMAGES_FAILURE:
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesDone = false;
+        draft.uploadImagesError = action.error;
+        break;
       case UNLIKE_POST_REQUEST:
         draft.unlikePostLoading = true;
         draft.unlikePostDone = false;

@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import React, { useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useInput from "../hooks/useInput";
-import { addPost } from "../reducers/post";
+import { addPost, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from "../reducers/post";
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -25,6 +25,28 @@ const PostForm = () => {
     imageInput.current.click();
   }, [imageInput.current]);
 
+  const onChangeImages = useCallback((e) => {
+    console.log("images", e.target.files);
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append("image", f);
+    });
+    dispatch({
+      type: UPLOAD_IMAGES_REQUEST,
+      data: imageFormData,
+    });
+  }, []);
+
+  const onRemoveImage = useCallback(
+    (index) => () => {
+      dispatch({
+        type: REMOVE_IMAGE,
+        data: index,
+      });
+    },
+    []
+  );
+
   return (
     <Form
       style={{ margin: "19px 0 20px" }}
@@ -43,6 +65,8 @@ const PostForm = () => {
           multiple
           style={{ visibility: "hidden" }}
           ref={imageInput}
+          name="image"
+          onChange={onChangeImages}
         />
         <Button onClick={onClickImageUpload}>이미지업로드</Button>
         <Button type="primary" style={{ float: "right" }} htmlType="submit">
@@ -50,11 +74,14 @@ const PostForm = () => {
         </Button>
       </div>
       <div>
-        {imagePaths.map((imagePath) => (
+        {imagePaths.map((imagePath, index) => (
           <div key={imagePath.id} style={{ display: "inline-block" }}>
-            <img src={imagePath} style={{ width: "200px" }} />
+            <img
+              src={`http://localhost:3065/${imagePath}`}
+              style={{ width: "200px" }}
+            />
             <div>
-              <Button>제거</Button>
+              <Button onClick={onRemoveImage(index)}>제거</Button>
             </div>
           </div>
         ))}
