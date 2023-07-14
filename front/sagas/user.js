@@ -1,15 +1,6 @@
 import axios from "axios";
 
-import {
-  all,
-  fork,
-  call,
-  take,
-  takeEvery,
-  takeLatest,
-  put,
-  delay,
-} from "redux-saga/effects";
+import { all, fork, call, takeLatest, put } from "redux-saga/effects";
 import {
   LOG_IN_SUCCESS,
   LOG_IN_FAILURE,

@@ -1,7 +1,4 @@
 import { produce } from "immer";
-import shortId from "shortid";
-import { fakerKO as faker } from "@faker-js/faker";
-faker.seed(123);
 
 export const initialState = {
   mainPosts: [],
