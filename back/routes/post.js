@@ -3,7 +3,7 @@ const multer = require("multer"); // npm i multer@1.4.4 : 파일, 이미지 등�
 const path = require("path");
 const fs = require("fs");
 
-const { User, Post, Comment, Image } = require("../models");
+const { User, Post, Comment, Image, Hashtag } = require("../models");
 const user = require("../models/user");
 const { isLoggedIn } = require("./middlewares");
 
@@ -48,10 +48,24 @@ router.post(
 
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   try {
+    const hashtags = req.body.content.match(/#[^\s#]+/g); // 작성글에서 #(hashtag)달린거만 뽑아내기
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map((tag) =>
+          Hashtag.findOrCreate({
+            where: { name: tag.slice(1).toLowerCase() },
+          })
+        )
+      );
+      // [[#노드, true], [#리액트,true]]
+      // findOrCreate: #노드#노드 중복일떄, 없을때는 등록하고 있을때는 가져옴. 대신 where써줘야함
+      await post.addHashtags(result.map((v) => v[0]));
+      //  [[#노드, true], [#리액트,true]] 이 모양이므로 배열에서 첫번째것만 추출한다.
+    }
     if (req.body.image) {
       if (Array.isArray(req.body.image)) {
         // 이미지 여러개 올리면 image: [제로초.png, 부기초.png]
