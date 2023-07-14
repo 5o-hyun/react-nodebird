@@ -41,6 +41,14 @@ const index = () => {
     };
   }, [hasMorePost, loadPostLoading]);
 
+  // 리트윗에러
+  const { retweetError } = useSelector((state) => state.post);
+  useEffect(() => {
+    if (retweetError) {
+      return alert(retweetError);
+    }
+  }, [retweetError]);
+
   return (
     <Layout>
       {me && <PostForm />}
