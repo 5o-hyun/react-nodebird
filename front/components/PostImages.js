@@ -18,7 +18,7 @@ const PostImages = ({ images }) => {
       <>
         <img
           role="presentation" // 스크린리더가 클릭할수는있지만, 굳이클릭하지않아도 된다는 의미.
-          src={images[0].src}
+          src={`http://localhost:3065/${images[0].src}`}
           alt={images[0].src}
           onClick={onZoom}
         />
@@ -31,14 +31,14 @@ const PostImages = ({ images }) => {
       <div style={{ display: "flex" }}>
         <img
           role="presentation" // 스크린리더가 클릭할수는있지만, 굳이클릭하지않아도 된다는 의미.
-          src={images[0].src}
+          src={`http://localhost:3065/${images[0].src}`}
           alt={images[0].src}
           onClick={onZoom}
           width="50%"
         />
         <img
           role="presentation" // 스크린리더가 클릭할수는있지만, 굳이클릭하지않아도 된다는 의미.
-          src={images[1].src}
+          src={`http://localhost:3065/${images[1].src}`}
           alt={images[1].src}
           onClick={onZoom}
           width="50%"
@@ -51,7 +51,7 @@ const PostImages = ({ images }) => {
     <div style={{ display: "flex", alignItems: "center" }}>
       <img
         role="presentation" // 스크린리더가 클릭할수는있지만, 굳이클릭하지않아도 된다는 의미.
-        src={images[0].src}
+        src={`http://localhost:3065/${images[0].src}`}
         alt={images[0].src}
         onClick={onZoom}
         width="50%"

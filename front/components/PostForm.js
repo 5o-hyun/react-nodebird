@@ -2,7 +2,12 @@ import { Button, Form, Input } from "antd";
 import React, { useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useInput from "../hooks/useInput";
-import { addPost, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from "../reducers/post";
+import {
+  addPost,
+  ADD_POST_REQUEST,
+  REMOVE_IMAGE,
+  UPLOAD_IMAGES_REQUEST,
+} from "../reducers/post";
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -18,8 +23,19 @@ const PostForm = () => {
   }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost(text));
-  }, [text]);
+    if (!text || !text.trim()) {
+      return alert("게시글을 작성하세요.");
+    }
+    const formData = new FormData();
+    imagePaths.forEach((p) => {
+      formData.append("image", p); // req.body.image
+    });
+    formData.append("content", text); // req.body.content
+    return dispatch({
+      type: ADD_POST_REQUEST,
+      data: formData,
+    });
+  }, [text, imagePaths]);
 
   const onClickImageUpload = useCallback(() => {
     imageInput.current.click();
@@ -70,12 +86,12 @@ const PostForm = () => {
         />
         <Button onClick={onClickImageUpload}>이미지업로드</Button>
         <Button type="primary" style={{ float: "right" }} htmlType="submit">
-          쨲쨲
+          게시하기
         </Button>
       </div>
       <div>
         {imagePaths.map((imagePath, index) => (
-          <div key={imagePath.id} style={{ display: "inline-block" }}>
+          <div key={imagePath} style={{ display: "inline-block" }}>
             <img
               src={`http://localhost:3065/${imagePath}`}
               style={{ width: "200px" }}
