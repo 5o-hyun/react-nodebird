@@ -143,8 +143,8 @@ const reducer = (state = initialState, action) => {
       case LOAD_POST_SUCCESS:
         draft.loadPostLoading = false;
         draft.loadPostDone = true;
-        draft.mainPosts = action.data.concat(draft.mainPosts); // 기존게시글에추가
-        draft.hasMorePost = draft.mainPosts.length < 50;
+        draft.mainPosts = draft.mainPosts.concat(action.data); // 기존게시글에추가
+        draft.hasMorePost = action.data.length === 10;
         break;
       case LOAD_POST_FAILURE:
         draft.loadPostLoading = false;

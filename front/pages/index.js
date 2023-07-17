@@ -29,8 +29,10 @@ const index = () => {
         document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePost && !loadPostLoading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id; // 마지막 게시글의 아이디
           dispatch({
             type: LOAD_POST_REQUEST,
+            lastId: lastId,
           });
         }
       }
@@ -39,7 +41,7 @@ const index = () => {
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [hasMorePost, loadPostLoading]);
+  }, [hasMorePost, loadPostLoading, mainPosts]);
 
   // 리트윗에러
   const { retweetError } = useSelector((state) => state.post);
