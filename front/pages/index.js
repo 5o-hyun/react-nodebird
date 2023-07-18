@@ -6,7 +6,7 @@ import { END } from "redux-saga";
 import Layout from "../components/Layout";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
-import { LOAD_POST_REQUEST } from "../reducers/post";
+import { LOAD_POSTS_REQUEST } from "../reducers/post";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import wrapper from "../store/configureStore";
 
@@ -26,7 +26,7 @@ const index = () => {
         if (hasMorePost && !loadPostLoading) {
           const lastId = mainPosts[mainPosts.length - 1]?.id; // 마지막 게시글의 아이디
           dispatch({
-            type: LOAD_POST_REQUEST,
+            type: LOAD_POSTS_REQUEST,
             lastId: lastId,
           });
         }
@@ -70,7 +70,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
         type: LOAD_MY_INFO_REQUEST,
       });
       store.dispatch({
-        type: LOAD_POST_REQUEST,
+        type: LOAD_POSTS_REQUEST,
       });
       store.dispatch(END); // dispatch를 통해 받아올 데이터를 성공될때까지 기다려준다
       await store.sagaTask.toPromise(); // 이건..사용방법
