@@ -113,16 +113,58 @@ router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
 router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   try {
     // 시퀄라이즈에서 find 조회, create 생성, destroy 삭제, update 수정(객체1:수정할거 객체2:조건)
-    const post = await Post.destroy({
+    await Post.destroy({
       where: {
         id: req.params.postId,
         UserId: req.user.id,
       },
     });
-    res.json({ PostId: parseInt(req.params.postId, 10) });
+    res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
   } catch (err) {
     console.error(err);
     next(err);
+  }
+});
+
+router.get("/:postId", async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+    if (!post) {
+      return res.status(403).send("존재하지 않는 게시글입니다.");
+    }
+    const fullPost = await Post.findOne({
+      where: { id: req.params.postId },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickname"],
+        },
+        {
+          model: Image,
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"],
+              order: [["createdAt", "DESC"]],
+            },
+          ],
+        },
+        {
+          model: User, // 좋아요 누른 사람
+          as: "Likers",
+          attributes: ["id"],
+        },
+      ],
+    });
+    res.status(200).json(fullPost);
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 
