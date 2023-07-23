@@ -1,0 +1,13 @@
+// 스타일드컴포넌트를 서버사이드렌드링 하기 위함. npm i babel-plugin-styled-components
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "babel-plugin-styled-components",
+      {
+        "ssr": true,
+        "displayName": true // 개발자도구에서 컴포넌트이름이 외계어가아닌 직관적으로 보임
+      }
+    ]
+  ]
+}
