@@ -14,6 +14,11 @@ const Post = () => {
   const router = useRouter();
   const { id } = router.query;
   const { singlePost } = useSelector((state) => state.post);
+
+  // if (router.isFallback) {
+  //   return <div>Loading...</div>
+  // }
+
   return (
     <Layout>
       <Head>
@@ -41,6 +46,20 @@ const Post = () => {
     </Layout>
   );
 };
+
+// getStaticProps: html로 미리 만들어도되는것들(갯수 제한이 있는것들)에 사용. getStaticProps를 사용하려면 getStaticPaths를 꼭 사용해야한다.
+// 사용하기가 까다롭다. 대신 HTML을 만드는것이므로 속도는 getServerSideProps보다 훨씬 빠르다.
+
+// export async function getStaticPaths() {
+//   return {
+//     path: [
+//       { params: { id: "1" } },
+//       { params: { id: "2" } },
+//       { params: { id: "3" } },
+//     ],
+//     fallback: true,
+//   };
+// }
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>
