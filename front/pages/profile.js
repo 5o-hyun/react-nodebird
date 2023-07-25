@@ -6,7 +6,7 @@ import FollowList from "../components/FollowList";
 import { useSelector } from "react-redux";
 import router from "next/router";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
-import useSWR from "swr"; // npm i swr , load get 같은 간단한 데이터가져오기를 한줄로 가능
+import useSWR from "swr"; // npm i swr , load get같은 간단한 데이터가져오기를 한줄로 가능
 import axios from "axios";
 import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
