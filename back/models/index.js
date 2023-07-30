@@ -1,4 +1,9 @@
 const Sequelize = require("sequelize");
+const comment = require("./comment");
+const hashtag = require("./hashtag");
+const image = require("./image");
+const post = require("./post");
+const user = require("./user");
 const env = process.env.NODE_ENV || "development"; // 환경변수 기본값으로 development. 나중에 배포시 production || development로 바꿔 배포용일땐 production써준다
 const config = require("../config/config")[env]; // config의 development를 가져온다.
 const db = {};
@@ -12,11 +17,20 @@ const sequelize = new Sequelize(
 );
 
 // db 빈 배열에 만든 테이블 import
-db.Comment = require("./comment")(sequelize, Sequelize);
-db.Hashtag = require("./hashtag")(sequelize, Sequelize);
-db.Image = require("./image")(sequelize, Sequelize);
-db.Post = require("./post")(sequelize, Sequelize);
-db.User = require("./user")(sequelize, Sequelize);
+db.Comment = comment;
+db.Hashtag = hashtag;
+db.Image = image;
+db.Post = post;
+db.User = user;
+// db.Comment = require("./comment")(sequelize, Sequelize);
+// db.Hashtag = require("./hashtag")(sequelize, Sequelize);
+// db.Image = require("./image")(sequelize, Sequelize);
+// db.Post = require("./post")(sequelize, Sequelize);
+// db.User = require("./user")(sequelize, Sequelize);
+
+Object.keys(db).forEach((modelName) => {
+  db[modelName].init(sequelize);
+});
 
 // db에 associate 한것들 반복돌리며 import
 Object.keys(db).forEach((modelName) => {
