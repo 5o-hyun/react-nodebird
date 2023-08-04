@@ -1,4 +1,6 @@
+# 키체인
 react-nodebird.pem
+# 기본적인 깃 안올릴것들 
 node_modules
 .env
 .next
