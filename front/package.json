@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "next",
-    "build": "cross-env NODE_ENV=production ANALYZE=true next build"
+    "build": "cross-env NODE_ENV=production ANALYZE=true next build",
+    "start": "cross-env NODE_ENV=production next start"
   },
   "author": "sohyun",
   "license": "ISC",
