@@ -13,6 +13,8 @@ const dotenv = require("dotenv"); // npm i dotenv
 const cookieParser = require("cookie-parser"); // npm i cookie-parser
 const morgan = require("morgan");
 const path = require("path");
+const hpp = require("hpp");
+const helmet = require("helmet");
 
 passportConfig(); // passport 설정적용
 dotenv.config(); // dotenv 설정적용
@@ -24,9 +26,21 @@ db.sequelize
   })
   .catch(console.error);
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({ origin: ["http://localhost:3000", "nodebird.com"], credentials: true })
+);
 
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "production") {
+  // 배포모드
+  app.use(morgan("combined")); // combined를 쓰면 사용자의ip라던지 추적이 가능함 (더 자세함)
+  // 이거 두개는 보안상 넣어주자. npm i pm2 cross-env helmet app
+  app.use(hpp());
+  app.use(helmet({ contentSecurityPolicy: false }));
+} else {
+  // 개발모드
+  app.use(morgan("dev"));
+}
+
 app.use("/", express.static(path.join(__dirname, "uploads")));
 // 프론트에서 보낸 데이터를 req.body에 넣어주기위해 이 두가지 작성. (routes의 req.body사용하기위해, get,post등보다 위에 적어야함 *위치중요)
 app.use(express.json()); // 프론트의 json을 req.body에 넣어줌
