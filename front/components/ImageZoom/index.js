@@ -10,6 +10,7 @@ import {
   ImgWrapper,
   Indicator,
 } from "./styles";
+import { backUrl } from "../../config/config";
 
 const ImageZoom = ({ images, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -31,8 +32,8 @@ const ImageZoom = ({ images, onClose }) => {
             slidesToScroll={1} // 1장씩 넘기기
           >
             {images.map((image, index) => (
-              <ImgWrapper>
-                <img src={`http://localhost:3065/${images.src}`} key={index} />
+              <ImgWrapper key={index}>
+                <img src={`${backUrl}/${image.src}`} />
               </ImgWrapper>
             ))}
           </Slick>
