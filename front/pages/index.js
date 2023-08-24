@@ -66,14 +66,14 @@ export const getServerSideProps = wrapper.getServerSideProps(
         axios.defaults.headers.Cookie = cookie;
       }
       // 서버사이드렌더링 할거
-      store.dispatch({
-        type: LOAD_MY_INFO_REQUEST,
-      });
-      store.dispatch({
-        type: LOAD_POSTS_REQUEST,
-      });
-      store.dispatch(END); // dispatch를 통해 받아올 데이터를 성공될때까지 기다려준다
-      await store.sagaTask.toPromise(); // 이건..사용방법
+      // store.dispatch({
+      //   type: LOAD_MY_INFO_REQUEST,
+      // });
+      // store.dispatch({
+      //   type: LOAD_POSTS_REQUEST,
+      // });
+      // store.dispatch(END); // dispatch를 통해 받아올 데이터를 성공될때까지 기다려준다
+      // await store.sagaTask.toPromise(); // 이건..사용방법
     }
 );
 // getServerSideProps부분이 실행되면 index Reducer에 case HYDRATE: 부분이 실행된다.
