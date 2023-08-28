@@ -39,7 +39,7 @@ export default class MyDocument extends Document {
           <Main />
           {/* https://polyfill.io/v3/url-builder  // nextscript나 Main위에 써줘야함*/}
           {/* 최신문법은 babel로 되는데, map set propmise등은 babel로안되서 Polyfill.io를 써주면 ie에서도 돌아감  */}
-          <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Ces2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019" />
+          {/* <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Ces2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019" /> */}
           <NextScript />
         </body>
       </Html>
